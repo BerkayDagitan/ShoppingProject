@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import type { IProduct } from "../model/IProduct";
 import Header from "./Header";
 import ProductList from "./ProductList";
+import { CssBaseline } from "@mui/material";
 
 function App() {
   const [products, setProducts] = useState<IProduct[]>([]);
@@ -14,21 +15,11 @@ function App() {
       });
   }, []);
 
-  function addProduct(){
-    setProducts([...products, 
-      {
-        id:Date.now(), 
-        name: "Product 4", 
-        price: 400, 
-        isActive: true,
-      }
-    ]);
-    //
-  }
   return (
     <>
+    <CssBaseline />
     <Header products={products} />
-    <ProductList products={products} addProduct={addProduct} />
+    <ProductList products={products} />
     </>
   )
 }
