@@ -18,7 +18,7 @@ function App() {
   return (
     <>
     <CssBaseline />
-    <Header products={products} />
+    <Header/>
     <ProductList products={products} />
     </>
   )
