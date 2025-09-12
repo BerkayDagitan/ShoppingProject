@@ -1,7 +1,7 @@
 import { Typography } from "@mui/material"
 
 export default function AboutPage(){
-    return (
+    return(
         <Typography variant="h2">AboutPage</Typography>
     )
 }
