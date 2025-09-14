@@ -1,6 +1,6 @@
-import type { IProduct } from "../model/IProduct";
-import Product from "./Product";
 import { Grid } from "@mui/material";
+import Product from "./Product";
+import type { IProduct } from "../../model/IProduct";
 
 interface Props {
   products: IProduct[];

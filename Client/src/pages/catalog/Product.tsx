@@ -1,6 +1,7 @@
-import type { IProduct } from "../model/IProduct";
 import { Card, CardMedia, CardContent, Typography, CardActions, Button } from "@mui/material";
 import { AddShoppingCart, Visibility } from '@mui/icons-material';
+import type { IProduct } from "../../model/IProduct";
+import { Link } from "react-router-dom";
 
 interface Props {
   product: IProduct;
@@ -16,8 +17,8 @@ export default function Product({ product }: Props) {
         <Typography gutterBottom variant="body2" color="secondary">{product.price} ₺</Typography>
       </CardContent>
       <CardActions>
-        <Button variant="outlined" size="small" startIcon={<AddShoppingCart />} color="success">Sepete Ekle</Button>
-        <Button variant="outlined" size="small" startIcon={<Visibility />} color="primary">Detayları Görüntüle</Button>
+        <Button variant="outlined" size="small" startIcon={<AddShoppingCart />} color="success">Add To Cart</Button>
+        <Button component={Link} to={`/catalog/${product.id}`} variant="outlined" size="small" startIcon={<Visibility />} color="primary">View</Button>
       </CardActions>
     </Card>
   );
