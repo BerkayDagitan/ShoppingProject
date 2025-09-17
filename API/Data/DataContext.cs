@@ -17,20 +17,6 @@ namespace API.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            // Cart -> CartItems (one-to-many)
-            modelBuilder.Entity<Cart>()
-                .HasMany(cart => cart.CartItems)
-                .WithOne()
-                .HasForeignKey(item => item.CartId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            // CartItem -> Product (many-to-one)
-            modelBuilder.Entity<CartItem>()
-                .HasOne(item => item.Product)
-                .WithMany()
-                .HasForeignKey(item => item.ProductId)
-                .OnDelete(DeleteBehavior.Restrict);
-
             modelBuilder.Entity<Product>().HasData(
                 new List<Product>
                 {
