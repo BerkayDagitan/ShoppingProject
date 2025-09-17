@@ -10,10 +10,26 @@ namespace API.Data
         }
 
         public DbSet<Product> Products => Set<Product>();
+        public DbSet<Cart> Carts => Set<Cart>();
+        public DbSet<CartItem> CartItems => Set<CartItem>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            // Cart -> CartItems (one-to-many)
+            modelBuilder.Entity<Cart>()
+                .HasMany(cart => cart.CartItems)
+                .WithOne()
+                .HasForeignKey(item => item.CartId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // CartItem -> Product (many-to-one)
+            modelBuilder.Entity<CartItem>()
+                .HasOne(item => item.Product)
+                .WithMany()
+                .HasForeignKey(item => item.ProductId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Product>().HasData(
                 new List<Product>

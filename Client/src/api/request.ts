@@ -1,5 +1,6 @@
 import axios, { type AxiosResponse, AxiosError } from "axios";
 import { toast } from "react-toastify";
+import { router } from "../../router/routes";
 
 axios.defaults.baseURL = "http://localhost:5239/api/";
 
@@ -10,16 +11,29 @@ axios.interceptors.response.use(response => {
     switch(status)
     {
         case 400:
+            if(data.errors)
+            {
+                const modelErrors : string[] = [];
+
+                for(const key in data.errors)
+                {
+                    if(data.errors[key])
+                    {
+                        modelErrors.push(data.errors[key]);
+                    }
+                }
+                throw modelErrors;
+            }
             toast.error(data.title);
             break;
         case 401:
             toast.error(data.title);
             break;
         case 404:
-            toast.error(data.title);
+            router.navigate("/not-found");
             break;
         case 500:
-            toast.error(data.title);
+            router.navigate("/server-error", { state: {error: data, status: status}});
             break;
         default:
             break;
