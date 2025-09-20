@@ -34,7 +34,7 @@ namespace API.Controllers
 
             if (product == null) return NotFound("Product not found");
 
-            _cart.AddItem(product, quantity);
+            _cart.AddItem(cart, product, quantity);
             var result = await _db.SaveChangesAsync() > 0;
 
             if (result) return CreatedAtAction(nameof(GetCart), CartToDTO(cart));

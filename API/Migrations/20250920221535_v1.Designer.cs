@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20250917153359_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20250920221535_v1")]
+    partial class v1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -92,6 +92,7 @@ namespace API.Migrations
                         {
                             Id = 1,
                             Description = "Apple Watch Series 1, temel sağlık ve bildirim takibi özelliklerine sahip, spor ve günlük kullanım odaklı bir akıllı saattir.",
+                            ImageUrl = "1.jpg",
                             IsActive = true,
                             Name = "Apple Watch Series 1",
                             Price = 7000m,
@@ -101,6 +102,7 @@ namespace API.Migrations
                         {
                             Id = 2,
                             Description = "Apple Watch Series 2, daha hızlı bir işlemci ve gelişmiş sağlık izleme özellikleri sunan bir akıllı saattir.",
+                            ImageUrl = "2.jpg",
                             IsActive = true,
                             Name = "Apple Watch Series 2",
                             Price = 15000m,
@@ -110,6 +112,7 @@ namespace API.Migrations
                         {
                             Id = 3,
                             Description = "Apple Watch Series 3, suya dayanıklılık ve gelişmiş fitness özellikleri ile donatılmış bir akıllı saattir.",
+                            ImageUrl = "3.jpg",
                             IsActive = true,
                             Name = "Apple Watch Series 3",
                             Price = 20000m,
@@ -119,6 +122,7 @@ namespace API.Migrations
                         {
                             Id = 4,
                             Description = "Xiaomi Redmi Watch 1, uygun fiyatlı bir akıllı saat arayanlar için ideal bir seçenektir.",
+                            ImageUrl = "4.jpg",
                             IsActive = true,
                             Name = "Xiaomi Redmi Watch 1",
                             Price = 3500m,
@@ -128,6 +132,7 @@ namespace API.Migrations
                         {
                             Id = 5,
                             Description = "Xiaomi Redmi Watch 2, daha büyük bir ekran ve geliştirilmiş sağlık izleme özellikleri sunan bir akıllı saattir.",
+                            ImageUrl = "5.jpg",
                             IsActive = true,
                             Name = "Xiaomi Redmi Watch 2",
                             Price = 5000m,
@@ -137,6 +142,7 @@ namespace API.Migrations
                         {
                             Id = 6,
                             Description = "Xiaomi Redmi Watch 3, daha fazla özellik ve şıklık sunan bir akıllı saattir.",
+                            ImageUrl = "6.jpg",
                             IsActive = true,
                             Name = "Xiaomi Redmi Watch 3",
                             Price = 6000m,
@@ -146,6 +152,7 @@ namespace API.Migrations
                         {
                             Id = 7,
                             Description = "Xiaomi Redmi Watch 4, daha fazla özelliği uygun fiyatlı bir akıllı saatte arayanlar için ideal bir seçenektir.",
+                            ImageUrl = "7.jpg",
                             IsActive = true,
                             Name = "Xiaomi Redmi Watch 4",
                             Price = 3500m,
@@ -155,7 +162,7 @@ namespace API.Migrations
 
             modelBuilder.Entity("API.Entity.CartItem", b =>
                 {
-                    b.HasOne("API.Entity.Cart", null)
+                    b.HasOne("API.Entity.Cart", "Cart")
                         .WithMany("CartItems")
                         .HasForeignKey("CartId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -164,8 +171,10 @@ namespace API.Migrations
                     b.HasOne("API.Entity.Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Cart");
 
                     b.Navigation("Product");
                 });

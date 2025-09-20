@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using API.Data;
 using API.Entity;
 using API.interfaces;
 
@@ -9,20 +10,20 @@ namespace API.services
 {
     public class CartServices : ICartServices
     {
-        private readonly Cart _cart;
+        private readonly DataContext _db;
 
-        public CartServices(Cart cart)
+        public CartServices(DataContext db)
         {
-            _cart = cart;
+            _db = db;
         }
 
-        public void AddItem(Product product, int quantity)
+        public void AddItem(Cart cart, Product product, int quantity)
         {
-            var item = _cart.CartItems.Where(c => c.ProductId == product.Id).FirstOrDefault();
+            var item = _db.CartItems.Where(c => c.ProductId == product.Id).FirstOrDefault();
 
             if (item == null)
             {
-                _cart.CartItems.Add(new CartItem { Product = product, Quantity = quantity, ProductId = product.Id });
+                _db.CartItems.Add(new CartItem { Product = product, Quantity = quantity, ProductId = product.Id, Cart = cart });
             }
             else
             {
@@ -32,14 +33,14 @@ namespace API.services
 
         public void DeleteItem(int productId, int quantity)
         {
-            var item = _cart.CartItems.Where(c => c.ProductId == productId).FirstOrDefault();
+            var item = _db.CartItems.Where(c => c.ProductId == productId).FirstOrDefault();
 
             if (item == null) return;
             else item.Quantity -= quantity;
 
             if (item.Quantity == 0)
             {
-                _cart.CartItems.Remove(item);
+                _db.CartItems.Remove(item);
             }
         }
     }

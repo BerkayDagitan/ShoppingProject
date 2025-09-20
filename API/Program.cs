@@ -1,5 +1,7 @@
 using API.Data;
+using API.interfaces;
 using API.Middlewares;
+using API.services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,6 +18,7 @@ builder.Services.AddDbContext<DataContext>(options =>
 builder.Services.AddCors();
 
 builder.Services.AddControllers();
+builder.Services.AddScoped<ICartServices, CartServices>();
 // Learn more about configuring  OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
