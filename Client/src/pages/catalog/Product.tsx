@@ -4,6 +4,8 @@ import type { IProduct } from "../../model/IProduct";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import request from "../../api/request";
+import { LoadingButton } from "@mui/lab";
+
 
 interface Props {
   product: IProduct;
@@ -31,8 +33,7 @@ export default function Product({ product }: Props) {
         <Typography gutterBottom variant="body2" color="secondary">{product.price} ₺</Typography>
       </CardContent>
       <CardActions>
-        <Button variant="outlined" size="small" startIcon={<AddShoppingCart />} color="success" 
-        onClick={() => handleAddItem(product.id)}>Add To Cart</Button>
+        <LoadingButton color="success" loading={loading} onClick={() => handleAddItem(product.id)} size="small" startIcon={<AddShoppingCart />} variant="outlined">Add To Cart</LoadingButton>
         <Button component={Link} to={`/catalog/${product.id}`} variant="outlined" size="small" startIcon={<Visibility />} color="primary">View</Button>
       </CardActions>
     </Card>

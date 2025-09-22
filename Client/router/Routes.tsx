@@ -8,6 +8,7 @@ import ProductDetailsPage from "../src/pages/catalog/ProductDetails";
 import ErrorPage from "../src/pages/ErrorPage";
 import ServerError from "../src/errors/ServerError";
 import NotFound from "../src/errors/NotFound";
+import ShoppingCartPage from "../src/pages/cart/ShoppingCartPage";
 
 export const router = createBrowserRouter([
     {
@@ -37,6 +38,9 @@ export const router = createBrowserRouter([
             },
             {
                 path: "not-found", element: <NotFound />
+            },
+            {
+                path: "cart", element: <ShoppingCartPage />
             },
             {
                 path: "*", element: <Navigate to="/not-found" replace />
