@@ -1,25 +1,32 @@
-import { useEffect, useState } from "react"
-import request from "../../api/request"
-import { CircularProgress, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
-import type { Cart } from "../../model/ICart.ts";
-import { Delete } from "@mui/icons-material";
+import { Alert, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
+import { AddCircleOutline, Delete, RemoveCircleOutline } from "@mui/icons-material";
+import { useCartContext } from "../../context/CartContext.tsx";
+import { LoadingButton } from "@mui/lab";
+import { useState } from "react";
+import request from "../../api/request.ts";
 
 export default function ShoppingCartPage()
 {
-    const [cart, setCart] = useState<Cart | null>(null);
-    const [loading , setLoading] = useState(true);
+    const { cart, setCart } = useCartContext();
+    const [loading, setLoading] = useState(false);
 
-    useEffect(()=> {
-
-        request.Cart.get()
+    function handleAddItem(productId: number){
+        setLoading(true);
+        request.Cart.addItem(productId)
         .then(cart => setCart(cart))
         .catch(error => console.log(error))
-        .finally(()=> setLoading(false))
+        .finally(() => setLoading(false));
+    }
 
-    }, [])
+    function handleDeleteItem(productId: number, quantity = 1){
+        setLoading(true);
+        request.Cart.deleteItem(productId, quantity)
+        .then((cart) => setCart(cart))
+        .catch(error => console.log(error))
+        .finally(() => setLoading(false));
+    }
 
-    if(loading) return <CircularProgress />
-    if(!cart) return <h1>There are no items in your cart</h1>
+    if(cart?.cartItems.length === 0) return <Alert severity="warning">There are no items in your cart</Alert>
 
     return (
         <TableContainer component={Paper}>
@@ -34,7 +41,7 @@ export default function ShoppingCartPage()
           </TableRow>
         </TableHead>
         <TableBody>
-          {cart.cartItems.map((item) => (
+          {cart?.cartItems.map((item) => (
             <TableRow
               key={item.productId}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -46,10 +53,18 @@ export default function ShoppingCartPage()
                 {item.name}
               </TableCell>
               <TableCell align="right">{item.price} ₺</TableCell>
-              <TableCell align="right">{item.quantity}</TableCell>
+              <TableCell align="right">
+                <LoadingButton loading={loading} onClick={() => handleAddItem(item.productId)}>
+                    <AddCircleOutline />
+                </LoadingButton>
+                {item.quantity}
+                <LoadingButton loading={loading} onClick={() => handleDeleteItem(item.productId)}>
+                    <RemoveCircleOutline />
+                </LoadingButton>
+              </TableCell>
               <TableCell align="right">{item.price * item.quantity}</TableCell>
               <TableCell align="right">
-                <IconButton color="error">
+                <IconButton color="error" loading={loading} onClick={() => handleDeleteItem(item.productId, item.quantity)}>
                     <Delete />
                 </IconButton>
               </TableCell>
