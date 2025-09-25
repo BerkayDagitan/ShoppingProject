@@ -17,13 +17,18 @@ namespace API.services
             _db = db;
         }
 
-        public void AddItem(Product product, int quantity)
+        public void AddItem(Cart cart, Product product, int quantity)
         {
-            var item = _db.CartItems.Where(c => c.ProductId == product.Id).FirstOrDefault();
+            var item = _db.CartItems.FirstOrDefault(c => c.CartId == cart.CartId && c.ProductId == product.Id);
 
             if (item == null)
             {
-                _db.CartItems.Add(new CartItem { Product = product, Quantity = quantity, ProductId = product.Id });
+                _db.CartItems.Add(new CartItem
+                {
+                    CartId = cart.CartId,
+                    ProductId = product.Id,
+                    Quantity = quantity
+                });
             }
             else
             {
@@ -31,14 +36,14 @@ namespace API.services
             }
         }
 
-        public void DeleteItem(int productId, int quantity)
+        public void DeleteItem(Cart cart, int productId, int quantity)
         {
-            var item = _db.CartItems.Where(c => c.ProductId == productId).FirstOrDefault();
+            var item = _db.CartItems.Where(c => c.CartId == cart.CartId && c.ProductId == productId).FirstOrDefault();
 
             if (item == null) return;
             else item.Quantity -= quantity;
 
-            if (item.Quantity == 0)
+            if (item.Quantity <= 0)
             {
                 _db.CartItems.Remove(item);
             }

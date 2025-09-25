@@ -1,29 +1,34 @@
-import { Alert, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
+import { Alert, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
 import { AddCircleOutline, Delete, RemoveCircleOutline } from "@mui/icons-material";
-import { useCartContext } from "../../context/CartContext.tsx";
 import { LoadingButton } from "@mui/lab";
 import { useState } from "react";
 import request from "../../api/request.ts";
+import { toast } from "react-toastify";
+import CartSummary from "./CartSummary.tsx";
+import { currencyTRY } from "../../utils/formatCurrency.ts";
+import { useAppDispatch, useAppSelector } from "../../hooks/hooks.ts";
+import { setCart } from "./cartSlice.ts";
 
 export default function ShoppingCartPage()
 {
-    const { cart, setCart } = useCartContext();
-    const [loading, setLoading] = useState(false);
+    const { cart } = useAppSelector(state => state.cart);
+    const dispatch = useAppDispatch();
+    const [status, setStatus] = useState({loading : false, id : ""});
 
-    function handleAddItem(productId: number){
-        setLoading(true);
+    function handleAddItem(productId: number, id: string){
+        setStatus({loading: true, id: id});
         request.Cart.addItem(productId)
-        .then(cart => setCart(cart))
+        .then(cart => dispatch(setCart(cart)))
         .catch(error => console.log(error))
-        .finally(() => setLoading(false));
+        .finally(() => setStatus({loading: false, id: ""}));
     }
 
-    function handleDeleteItem(productId: number, quantity = 1){
-        setLoading(true);
+    function handleDeleteItem(productId: number, id: string, quantity = 1){
+        setStatus({loading: true, id: id});
         request.Cart.deleteItem(productId, quantity)
-        .then((cart) => setCart(cart))
+        .then(cart => dispatch(setCart(cart)))
         .catch(error => console.log(error))
-        .finally(() => setLoading(false));
+        .finally(() => setStatus({loading: false, id: ""}));
     }
 
     if(!cart || cart.cartItems.length === 0) return <Alert severity="warning">There are no items in your cart</Alert>
@@ -52,24 +57,27 @@ export default function ShoppingCartPage()
               <TableCell component="th" scope="row">
                 {item.name}
               </TableCell>
-              <TableCell align="right">{item.price} ₺</TableCell>
+              <TableCell align="right">{currencyTRY.format(item.price)}</TableCell>
               <TableCell align="right">
-                <LoadingButton loading={loading} onClick={() => handleAddItem(item.productId)}>
+                <LoadingButton loading={status.loading && status.id === "add" + item.productId} onClick={() => handleAddItem(item.productId, "add" + item.productId)}>
                     <AddCircleOutline />
                 </LoadingButton>
                 {item.quantity}
-                <LoadingButton loading={loading} onClick={() => handleDeleteItem(item.productId)}>
+                <LoadingButton loading={status.loading && status.id === "del" + item.productId} onClick={() => handleDeleteItem(item.productId, "del" + item.productId)}>
                     <RemoveCircleOutline />
                 </LoadingButton>
               </TableCell>
-              <TableCell align="right">{item.price * item.quantity}</TableCell>
+              <TableCell align="right">{currencyTRY.format(item.price * item.quantity)}</TableCell>
               <TableCell align="right">
-                <IconButton color="error" loading={loading} onClick={() => handleDeleteItem(item.productId, item.quantity)}>
+                <LoadingButton color="error" loading={status.loading && status.id ==="del_all" + item.productId} onClick={() => {handleDeleteItem(item.productId, "del_all" + item.productId, item.quantity)
+                  toast.error("Item removed from cart");
+                }}>
                     <Delete />
-                </IconButton>
+                </LoadingButton>
               </TableCell>
             </TableRow>
           ))}
+          <CartSummary />
         </TableBody>
       </Table>
     </TableContainer>

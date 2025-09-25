@@ -34,7 +34,7 @@ namespace API.Controllers
 
             if (product == null) return NotFound("Product not found");
 
-            _cart.AddItem(product, quantity);
+            _cart.AddItem(cart, product, quantity);
             var result = await _db.SaveChangesAsync() > 0;
 
             if (result) return CreatedAtAction(nameof(GetCart), CartToDTO(cart));
@@ -43,13 +43,22 @@ namespace API.Controllers
         }
 
         [HttpDelete]
-        public async Task<ActionResult> DeleteItemFromCart(int productId, int quantity)
+        public async Task<ActionResult<CartDTO>> DeleteItemFromCart(int productId, int quantity)
         {
-            _cart.DeleteItem(productId, quantity);
+            var cart = await GetOrCreate();
 
-            var result = await _db.SaveChangesAsync() > 0;
+            _cart.DeleteItem(cart, productId, quantity);
 
-            if (result) return Ok();
+            if (await _db.SaveChangesAsync() > 0)
+            {
+                await _db.Entry(cart)
+                .Collection(i => i.CartItems)
+                .Query()
+                .Include(p => p.Product)
+                .LoadAsync();
+
+                return Ok(CartToDTO(cart));
+            }
 
             return BadRequest(new ProblemDetails { Title = "Problem removing item from the cart" });
         }
@@ -64,7 +73,9 @@ namespace API.Controllers
                 var cookieOptions = new CookieOptions
                 {
                     IsEssential = true,
-                    Expires = DateTime.Now.AddDays(30)
+                    Expires = DateTime.Now.AddDays(30),
+                    SameSite = SameSiteMode.None,
+                    Secure = true
                 };
                 Response.Cookies.Append("customerId", customerId, cookieOptions);
                 cart = new Cart { CustomerId = customerId };

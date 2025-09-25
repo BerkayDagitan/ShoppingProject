@@ -5,7 +5,10 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import request from "../../api/request";
 import { LoadingButton } from "@mui/lab";
-import { useCartContext } from "../../context/CartContext";
+import { toast } from "react-toastify";
+import { currencyTRY } from "../../utils/formatCurrency";
+import { useAppDispatch } from "../../hooks/hooks";
+import { setCart } from "../cart/cartSlice";
 
 
 interface Props {
@@ -15,14 +18,17 @@ interface Props {
 export default function Product({ product }: Props) {
 
   const [loading, setLoading] = useState(false);
-  const {setCart} = useCartContext();
+  const dispatch = useAppDispatch();
 
   function handleAddItem(productId : number){
 
     setLoading(true);
 
     request.Cart.addItem(productId)
-    .then(cart => setCart(cart))
+    .then(cart => {
+                dispatch(setCart(cart))
+                toast.success("Item added to cart");
+            })
     .catch(error => console.log(error))
     .finally(() => setLoading(false))
   }
@@ -33,7 +39,7 @@ export default function Product({ product }: Props) {
       <CardContent>
         <Typography gutterBottom variant="h6" component="h2" color="text.secondary">{product.name}</Typography>
         <Typography gutterBottom variant="body2" color="secondary">{product.description}</Typography>
-        <Typography gutterBottom variant="body2" color="secondary">{product.price} ₺</Typography>
+        <Typography gutterBottom variant="body2" color="secondary">{currencyTRY.format(product.price)}</Typography>
       </CardContent>
       <CardActions>
         <LoadingButton color="success" loading={loading} onClick={() => handleAddItem(product.id)} size="small" startIcon={<AddShoppingCart />} variant="outlined">Add To Cart</LoadingButton>

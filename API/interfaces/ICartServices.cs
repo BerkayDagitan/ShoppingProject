@@ -8,7 +8,7 @@ namespace API.interfaces
 {
     public interface ICartServices
     {
-        public void AddItem(Product product, int quantity);
-        public void DeleteItem(int productId, int quantity);
+        public void AddItem(Cart cart, Product product, int quantity);
+        public void DeleteItem(Cart cart, int productId, int quantity);
     }
 }
