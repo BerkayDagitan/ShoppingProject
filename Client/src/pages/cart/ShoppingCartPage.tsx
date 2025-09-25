@@ -26,7 +26,7 @@ export default function ShoppingCartPage()
         .finally(() => setLoading(false));
     }
 
-    if(cart?.cartItems.length === 0) return <Alert severity="warning">There are no items in your cart</Alert>
+    if(!cart || cart.cartItems.length === 0) return <Alert severity="warning">There are no items in your cart</Alert>
 
     return (
         <TableContainer component={Paper}>

@@ -34,7 +34,7 @@ namespace API.Controllers
 
             if (product == null) return NotFound("Product not found");
 
-            _cart.AddItem(cart, product, quantity);
+            _cart.AddItem(product, quantity);
             var result = await _db.SaveChangesAsync() > 0;
 
             if (result) return CreatedAtAction(nameof(GetCart), CartToDTO(cart));
@@ -45,8 +45,6 @@ namespace API.Controllers
         [HttpDelete]
         public async Task<ActionResult> DeleteItemFromCart(int productId, int quantity)
         {
-            var cart = GetOrCreate();
-
             _cart.DeleteItem(productId, quantity);
 
             var result = await _db.SaveChangesAsync() > 0;

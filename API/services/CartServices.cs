@@ -17,13 +17,13 @@ namespace API.services
             _db = db;
         }
 
-        public void AddItem(Cart cart, Product product, int quantity)
+        public void AddItem(Product product, int quantity)
         {
             var item = _db.CartItems.Where(c => c.ProductId == product.Id).FirstOrDefault();
 
             if (item == null)
             {
-                _db.CartItems.Add(new CartItem { Product = product, Quantity = quantity, ProductId = product.Id, Cart = cart });
+                _db.CartItems.Add(new CartItem { Product = product, Quantity = quantity, ProductId = product.Id });
             }
             else
             {
