@@ -2,13 +2,10 @@ import { Card, CardMedia, CardContent, Typography, CardActions, Button } from "@
 import { AddShoppingCart, Visibility } from '@mui/icons-material';
 import type { IProduct } from "../../model/IProduct";
 import { Link } from "react-router-dom";
-import { useState } from "react";
-import request from "../../api/request";
 import { LoadingButton } from "@mui/lab";
-import { toast } from "react-toastify";
 import { currencyTRY } from "../../utils/formatCurrency";
-import { useAppDispatch } from "../../hooks/hooks";
-import { setCart } from "../cart/cartSlice";
+import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
+import { addItemToCart } from "../cart/cartSlice";
 
 
 interface Props {
@@ -17,21 +14,10 @@ interface Props {
 
 export default function Product({ product }: Props) {
 
-  const [loading, setLoading] = useState(false);
+  const { status} = useAppSelector(state => state.cart);
   const dispatch = useAppDispatch();
 
-  function handleAddItem(productId : number){
 
-    setLoading(true);
-
-    request.Cart.addItem(productId)
-    .then(cart => {
-                dispatch(setCart(cart))
-                toast.success("Item added to cart");
-            })
-    .catch(error => console.log(error))
-    .finally(() => setLoading(false))
-  }
 
   return (
     <Card sx={{ maxWidth: 450, height: '90%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
@@ -42,7 +28,7 @@ export default function Product({ product }: Props) {
         <Typography gutterBottom variant="body2" color="secondary">{currencyTRY.format(product.price)}</Typography>
       </CardContent>
       <CardActions>
-        <LoadingButton color="success" loading={loading} onClick={() => handleAddItem(product.id)} size="small" startIcon={<AddShoppingCart />} variant="outlined">Add To Cart</LoadingButton>
+        <LoadingButton color="success" loading={status === "pendingAddItem" + product.id} onClick={() => dispatch(addItemToCart({ productId: product.id }))} size="small" startIcon={<AddShoppingCart />} variant="outlined">Add To Cart</LoadingButton>
         <Button component={Link} to={`/catalog/${product.id}`} variant="outlined" size="small" startIcon={<Visibility />} color="primary">View</Button>
       </CardActions>
     </Card>
