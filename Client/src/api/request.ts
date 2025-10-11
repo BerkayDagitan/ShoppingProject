@@ -7,19 +7,15 @@ axios.defaults.withCredentials = true;
 
 axios.interceptors.response.use(response => {
     return response;
-},(error: AxiosError) => {
-    const{data, status} = error.response as AxiosResponse;
-    switch(status)
-    {
+}, (error: AxiosError) => {
+    const { data, status } = error.response as AxiosResponse;
+    switch (status) {
         case 400:
-            if(data.errors)
-            {
-                const modelErrors : string[] = [];
+            if (data.errors) {
+                const modelErrors: string[] = [];
 
-                for(const key in data.errors)
-                {
-                    if(data.errors[key])
-                    {
+                for (const key in data.errors) {
+                    if (data.errors[key]) {
                         modelErrors.push(data.errors[key]);
                     }
                 }
@@ -34,7 +30,7 @@ axios.interceptors.response.use(response => {
             router.navigate("/not-found");
             break;
         case 500:
-            router.navigate("/server-error", { state: {error: data, status: status}});
+            router.navigate("/server-error", { state: { error: data, status: status } });
             break;
         default:
             break;

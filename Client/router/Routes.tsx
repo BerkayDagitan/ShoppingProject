@@ -1,20 +1,20 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import App from "../src/components/App";
-import HomePage from "../src/pages/HomePage";
-import AboutPage from "../src/pages/AboutPage";
-import ContactPage from "../src/pages/ContactPage";
-import CatalogPage from "../src/pages/catalog/CatalogPage";
-import ProductDetailsPage from "../src/pages/catalog/ProductDetails";
-import ErrorPage from "../src/pages/ErrorPage";
+import HomePage from "../src/features/counter/HomePage";
+import AboutPage from "../src/features/counter/AboutPage";
+import ContactPage from "../src/features/counter/ContactPage";
+import CatalogPage from "../src/features/catalog/CatalogPage";
+import ProductDetailsPage from "../src/features/catalog/ProductDetails";
+import ErrorPage from "../src/features/counter/ErrorPage";
 import ServerError from "../src/errors/ServerError";
 import NotFound from "../src/errors/NotFound";
-import ShoppingCartPage from "../src/pages/cart/ShoppingCartPage";
+import ShoppingCartPage from "../src/features/cart/ShoppingCartPage";
 
 export const router = createBrowserRouter([
     {
         path: "/",
         element: <App />,
-        children:[
+        children: [
             {
                 path: "", element: <HomePage />
             },

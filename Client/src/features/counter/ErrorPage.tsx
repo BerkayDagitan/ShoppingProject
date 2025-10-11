@@ -1,20 +1,20 @@
 import { Alert, AlertTitle, Button, Container, List, ListItem, ListItemText } from "@mui/material";
-import request from "../api/request";
+import request from "../../api/request";
 import { useState } from "react";
 
-export default function ErrorPage(){
+export default function ErrorPage() {
     const [validationErrors, setValidationErrors] = useState<string[]>([]);
 
-    function getValidationErrors(){
+    function getValidationErrors() {
         request.Errors.getValidationError()
             .then(() => console.log("no validation"))
             .catch(errors => setValidationErrors(errors));
     }
 
-    return(
+    return (
         <Container>
             {
-                validationErrors.length > 0 && 
+                validationErrors.length > 0 &&
                 (
                     <Alert severity="error" sx={{ mt: 2 }}>
                         <AlertTitle>Validation Errors</AlertTitle>

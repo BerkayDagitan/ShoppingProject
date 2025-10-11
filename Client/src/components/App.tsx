@@ -6,7 +6,7 @@ import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import request from "../api/request";
 import { useAppDispatch } from "../hooks/hooks";
-import { setCart } from "../pages/cart/cartSlice";
+import { setCart } from "../features/cart/cartSlice";
 
 function App() {
 
@@ -15,21 +15,21 @@ function App() {
 
   useEffect(() => {
     request.Cart.get()
-    .then(cart => dispatch(setCart(cart)))
-    .catch(error => console.log(error))
-    .finally(() => setLoading(false));
+      .then(cart => dispatch(setCart(cart)))
+      .catch(error => console.log(error))
+      .finally(() => setLoading(false));
   }, [])
 
-  if(loading) return <CircularProgress />
+  if (loading) return <CircularProgress />
 
   return (
     <>
-    <ToastContainer position="bottom-right" hideProgressBar theme="colored"  />
-    <CssBaseline />
-    <Header/>
-    <Container>
-      <Outlet/>
-    </Container>
+      <ToastContainer position="bottom-right" hideProgressBar theme="colored" />
+      <CssBaseline />
+      <Header />
+      <Container>
+        <Outlet />
+      </Container>
     </>
   )
 }

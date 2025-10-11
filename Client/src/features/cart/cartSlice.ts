@@ -1,50 +1,46 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import type { Cart } from "../../model/ICart.ts";
+import type { Cart } from "../../model/ICart.ts.ts";
 import request from "../../api/request.ts";
 import { toast } from "react-toastify";
 
 interface CartState {
     cart: Cart | null;
-    status : string;
+    status: string;
 }
 
 const initialState: CartState = {
-    cart : null,
+    cart: null,
     status: "idle"
 }
 
-export const addItemToCart = createAsyncThunk<Cart, {productId: number, quantity?: number}>(
+export const addItemToCart = createAsyncThunk<Cart, { productId: number, quantity?: number }>(
     "cart/addItemToCart",
-    async ({productId, quantity = 1}) => {
-        try
-        {
+    async ({ productId, quantity = 1 }) => {
+        try {
             return await request.Cart.addItem(productId, quantity);
         }
-        catch (error)
-        {
+        catch (error) {
             console.log(error);
         }
     }
 );
 
-export const deleteItemFromCart = createAsyncThunk<Cart, {productId: number, quantity?: number, key?: string}>(
+export const deleteItemFromCart = createAsyncThunk<Cart, { productId: number, quantity?: number, key?: string }>(
     "cart/deleteItemFromCart",
-    async ({productId, quantity = 1}) => {
-        try
-        {
+    async ({ productId, quantity = 1 }) => {
+        try {
             return await request.Cart.deleteItem(productId, quantity);
         }
-        catch (error)
-        {
+        catch (error) {
             console.log(error);
         }
     }
 );
 
 export const cartSlice = createSlice({
-    name : "cart",
+    name: "cart",
     initialState,
-    reducers : {
+    reducers: {
         setCart: (state, action) => {
             state.cart = action.payload;
         }
