@@ -1,5 +1,5 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
-import App from "../src/components/App";
+import App from "../src/layout/App";
 import HomePage from "../src/features/counter/HomePage";
 import AboutPage from "../src/features/counter/AboutPage";
 import ContactPage from "../src/features/counter/ContactPage";
@@ -9,6 +9,8 @@ import ErrorPage from "../src/features/counter/ErrorPage";
 import ServerError from "../src/errors/ServerError";
 import NotFound from "../src/errors/NotFound";
 import ShoppingCartPage from "../src/features/cart/ShoppingCartPage";
+import LoginPage from "../src/features/account/loginPage";
+import RegisterPage from "../src/features/account/registerPage";
 
 export const router = createBrowserRouter([
     {
@@ -44,7 +46,13 @@ export const router = createBrowserRouter([
             },
             {
                 path: "*", element: <Navigate to="/not-found" replace />
-            }
+            },
+            {
+                path: "login", element: <LoginPage />
+            },
+            {
+                path: "register", element: <RegisterPage />
+            },
         ]
     }
 ])

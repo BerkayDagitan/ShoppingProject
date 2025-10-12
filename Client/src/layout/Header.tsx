@@ -12,6 +12,11 @@ const links = [
   { title: 'Error', to: '/error' }
 ];
 
+const authLinks = [
+  { title: "Login", to: "/login" },
+  { title: "Register", to: "/register" }
+]
+
 const navStyles = {
   color: 'inherit',
   textDecoration: 'none',
@@ -19,37 +24,38 @@ const navStyles = {
     color: "text.primary"
   },
   "&.active": {
-    color : "warning.main"
+    color: "warning.main"
   }
 }
 
 export default function Header() {
   const { cart } = useAppSelector(state => state.cart)
-  
+
   const itemCount = cart?.cartItems?.reduce((total, item) => total + item.quantity, 0) ?? 0;
 
   return (
     <AppBar position="static" sx={{ mb: 4 }}>
-      <Toolbar sx={{display: 'flex', justifyContent: 'space-between'}}>
-        <Box sx={{ display: 'flex', alignItems: 'center'}}>
-        <Typography variant="h6">E-Commerce</Typography>
-
-        <Stack direction={"row"}>
-          {links.map(link =>
-            <Button key={link.to} component={NavLink} to={link.to} sx={navStyles}>{link.title}</Button>
-          )}
-        </Stack>
-
+      <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Typography variant="h6">E-Commerce</Typography>
+          <Stack direction={"row"}>
+            {links.map(link =>
+              <Button key={link.to} component={NavLink} to={link.to} sx={navStyles}>{link.title}</Button>
+            )}
+          </Stack>
         </Box>
-
-        <Box>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flexWrap: 'nowrap' }}>
           <IconButton component={Link} to="/cart" size="large" edge="start" color="inherit">
             <Badge badgeContent={itemCount} color="secondary">
-              <ShoppingCart/>
+              <ShoppingCart />
             </Badge>
           </IconButton>
+          <Stack direction={"row"} spacing={1}>
+            {authLinks.map(link =>
+              <Button key={link.to} component={NavLink} to={link.to} sx={navStyles}>{link.title}</Button>
+            )}
+          </Stack>
         </Box>
-
       </Toolbar>
     </AppBar>
   );

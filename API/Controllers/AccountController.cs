@@ -1,5 +1,6 @@
 using API.DTO;
 using API.Entity;
+using API.services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualBasic;
@@ -7,14 +8,16 @@ using Microsoft.VisualBasic;
 namespace API.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class AccountController : Controller
     {
+        private readonly TokenService _tokenService;
         private readonly UserManager<AppUser> _userManager;
 
-        public AccountController(UserManager<AppUser> userManager)
+        public AccountController(UserManager<AppUser> userManager, TokenService tokenService)
         {
             _userManager = userManager;
+            _tokenService = tokenService;
         }
 
         [HttpPost("login")]
@@ -24,14 +27,14 @@ namespace API.Controllers
 
             if (user == null)
             {
-                return BadRequest("Invalid username");
+                return BadRequest(new ProblemDetails { Title = "Username is incorrect" });
             }
 
             var result = await _userManager.CheckPasswordAsync(user, model.Password);
 
             if (result)
             {
-                return Ok(new { token = "token" });
+                return Ok(new { token = await _tokenService.GenerateToken(user) });
             }
 
             return Unauthorized();
