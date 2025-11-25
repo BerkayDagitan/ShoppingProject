@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import type { User } from "../../model/IUser";
 import request from "../../api/request";
 import type { FieldValues } from "react-hook-form";
+import { router } from "../../../router/routes";
 
 interface AccountState {
     user: User | null;
@@ -28,10 +29,18 @@ export const loginUser = createAsyncThunk<User, FieldValues>(
 export const accountSlice = createSlice({
     name: "account",
     initialState,
-    reducers: {},
+    reducers: {
+        logout: (state) => {
+            state.user = null;
+            localStorage.removeItem("user");
+            router.navigate("/");
+        }
+    },
     extraReducers: (builder => {
         builder.addCase(loginUser.fulfilled, (state, action) => {
             state.user = action.payload;
         });
     }),
 });
+
+export const { logout } = accountSlice.actions;
