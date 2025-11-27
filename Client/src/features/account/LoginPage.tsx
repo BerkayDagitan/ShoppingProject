@@ -30,10 +30,11 @@ export default function LoginPage() {
                     <LockOutlined />
                 </Avatar>
                 <Typography component="h1" variant="h5" sx={{ textAlign: "center" }}>Login</Typography>
-                <Box component="form" onSubmit={handleSubmit(submitForm)} noValidate sx={{ mt: 2 }}></Box>
-                <TextField {...register("username", { required: "Username is required" })} label="Enter Username" fullWidth required autoFocus sx={{ mb: 2 }} size="small" error={!!errors.username} helperText={errors.username?.message}></TextField>
-                <TextField {...register("password", { required: "Password is required", minLength: { value: 6, message: "Minimum length is 6 characters" } })} label="Enter Password" type="password" fullWidth required sx={{ mb: 2 }} size="small" error={!!errors.password} helperText={errors.password?.message}></TextField>
-                <LoadingButton loading={isSubmitting} disabled={isValid} type="submit" variant="contained" fullWidth sx={{ mt: 1, height: 40 }}>Login</LoadingButton>
+                <Box component="form" onSubmit={handleSubmit(submitForm)} noValidate sx={{ mt: 2 }}>
+                    <TextField {...register("username", { required: "Username is required" })} label="Enter Username" fullWidth required autoFocus sx={{ mb: 2 }} size="small" error={!!errors.username} helperText={errors.username?.message}></TextField>
+                    <TextField {...register("password", { required: "Password is required", minLength: { value: 6, message: "Minimum length is 6 characters" } })} label="Enter Password" type="password" fullWidth required sx={{ mb: 2 }} size="small" error={!!errors.password} helperText={errors.password?.message}></TextField>
+                    <LoadingButton loading={isSubmitting} disabled={!isValid} type="submit" variant="contained" fullWidth sx={{ mt: 1, height: 40 }}>Login</LoadingButton>
+                </Box>
             </Paper>
         </Container>
     );

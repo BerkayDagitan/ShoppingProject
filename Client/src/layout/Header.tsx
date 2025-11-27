@@ -56,7 +56,7 @@ export default function Header() {
           {
             user ? (
               <Stack direction="row">
-                <Button sx={navStyles}>Welcome {user.name}</Button>
+                <Button sx={navStyles}>Welcome, {user.name}</Button>
                 <Button sx={navStyles} onClick={() => dispatch(logout())}>Log Out</Button>
               </Stack>
             ) : (
